@@ -26,7 +26,7 @@ library(ggeffects)
 
 # Loading data
 ```{r}
-fish_raw_data <- read_csv(here('data/NTLakes_Fish_Data.csv'))
+raw_data <- read_csv(here('ntl6_v12.csv'))
 ```
 
 # Problem 1
@@ -41,13 +41,29 @@ H1: Fish length is a significant predictor of fish weight for trout perch.
 # Problem 2
 ```{r}
 # cleaning data
-fish_data <- sqldf("SELECT year4, spname, length, weight FROM fish_raw_data
+fish_data <- sqldf("SELECT year4, spname, length, weight FROM raw_data
                     WHERE spname = 'TROUTPERCH'")
 
 # missing data viz
 vis_miss(fish_data)
 ```
 
+Figure 1: This figure shows that there are no missing values for year4, spname, and length, but 41% of the data is missing for weight.
+
+# Problem 3
+```{r}
+fish_lm <- lm(weight ~ length, data = fish_data) # linear model
+fish_res <- fish_lm$residuals # calc residuals
+```
+
+# Problem 4
+```{r, fig.height=6, fig.width=7}
+par(mfrow = c(2,2)) # plots two next to each other
+plot(fish_lm) # plotting
+```
+Figure 2: This figure contains four different diagnostic plots.
+
+# Problem 5
 
 
 
