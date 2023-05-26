@@ -77,6 +77,67 @@ The residuals vs. leverage shows influential data points. Based on the plot, the
 summary(fish_lm)
 ```
 
+# Problem 7
+```{r}
+fish_anova <- anova(fish_lm) # anova table
 
+# pulled from workshop 7
+fish_table <- tidy(fish_anova) %>% 
+                      #round the sum of squares and mean squares columns to have 5 digits
+                      mutate(across(sumsq:meansq, ~ round(.x, digits = 5))) %>%  
+                      #round the F-statistic to have 1 digit
+                      mutate(statistic = round(statistic, digits = 1)) %>%  
+                      #replace the very very very small p value with < 0.001
+                      mutate(p.value = case_when(
+                             p.value < 0.001 ~ "< 0.001")) %>%  
+                      #rename the stem_length cell to be meaningful
+                      mutate(term = case_when( term == "length" ~ "Fish Length (mm)",
+                             TRUE ~ term)) %>% 
+                      #make the data frame a flextable object
+                      flextable() %>% 
+                      #change the header labels to be meaningful
+                      set_header_labels(df = "Degrees of Freedom", 
+                                        sumsq = "Sum of squares",
+                                        meansq = "Mean squares",
+                                        statistic = "F-statistic",
+                                        p.value = "p-value") 
+fish_table
+```
 
+# Problem 8
+This table shares a lot of the same information as the summary() including the f-statistic, p-value, and degrees of freedom. 
+
+# Problem 9
+With the data passing all diagnostic checks in problem 4, I was able to run a linear regression model to investigate the relationship between length and weight in trout. This linear regression, as shown in the table in problem 7, calculated a p-value of < 0.001, showing that length is a significant predictor of weight in trout. 
+
+# Problem 10
+```{r}
+# extract model predictions
+predictions <- ggpredict(fish_lm, terms = "length")
+predictions
+
+# visualization code
+plot_predictions <- ggplot(data = fish_data, aes(x = length, y = weight)) + 
+    geom_point() + # add points
+    geom_line(data = predictions, 
+              aes(x = x, y = predicted), 
+              color = 'lightblue', 
+              linewidth = 1) + # add regression line
+    geom_ribbon(data = predictions, aes(x = x, # add confid. interval
+                                        y = predicted, 
+                                        ymin = conf.low, 
+                                        ymax = conf.high), 
+                alpha = 0.2) +
+    theme_classic() + # add theme
+    labs(x = 'Fish Length (mm)', y = 'Fish Weight (g)', # add labels and caption
+         title = 'Fish Length as a Predictor of Fish Weight', 
+         caption = "Figure 3: Fish lengths and weights against predicted values, shown with confidence interval.") +
+    theme(plot.caption = element_text(hjust = 0), # adjustments
+          text = element_text(family = 'Helvetica')) 
+
+plot_predictions
+```
+
+Link to repo:  
+https://github.com/lukegtodd/ENVS-193DS_homework-04_todd-luke 
 
