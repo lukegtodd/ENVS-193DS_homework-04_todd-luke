@@ -64,6 +64,18 @@ plot(fish_lm) # plotting
 Figure 2: This figure contains four different diagnostic plots.
 
 # Problem 5
+The residuals vs. fitted plot shows linearity and constant variance. Based on the plot, the points seem to be randomly distributed.  
+
+The QQ norm plot is used to test if a dataset is normally distributed. Based on the plot, it appears to be normally distributed.  
+
+The scale location plot is used to show homoscedasticity of variance. Based on the plot, the data seems to be randomly distributed.  
+
+The residuals vs. leverage shows influential data points. Based on the plot, there appear to be some high leverage points.  
+
+# Problem 6
+```{r}
+summary(fish_lm)
+```
 
 
 
