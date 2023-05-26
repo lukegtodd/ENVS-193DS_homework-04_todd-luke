@@ -1,0 +1,54 @@
+---
+title: "Homework 4"
+author: "Luke Todd"
+date: "2023-05-26"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Loading Packages
+```{r}
+library(here)
+library(tidyverse)
+library(car)
+library(sqldf)
+library(janitor)
+library(ggthemes)
+library(naniar)
+library(performance)
+library(flextable)
+library(broom)
+library(ggeffects)
+```
+
+# Loading data
+```{r}
+fish_raw_data <- read_csv(here('data/NTLakes_Fish_Data.csv'))
+```
+
+# Problem 1
+Mathematical:  
+H0: $\beta_1$ = 0  
+H1: $\beta_1$ != 0  
+
+Biological:  
+H0: Fish length is not a significant predictor of fish weight for trout perch.  
+H1: Fish length is a significant predictor of fish weight for trout perch.  
+
+# Problem 2
+```{r}
+# cleaning data
+fish_data <- sqldf("SELECT year4, spname, length, weight FROM fish_raw_data
+                    WHERE spname = 'TROUTPERCH'")
+
+# missing data viz
+vis_miss(fish_data)
+```
+
+
+
+
+
